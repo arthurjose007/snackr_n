@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "223072121044",
+    "project_id": "snackr-b0d91",
+    "storage_bucket": "snackr-b0d91.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223072121044:android:7931b2c881497a500f8b41",
+        "android_client_info": {
+          "package_name": "com.example.snackr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU5e3K9Utni3nzOS7Q3ggv3PPtsFy7_LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
