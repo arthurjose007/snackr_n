@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:snackr/core/helper/cashe_helper/shared_pref.dart';
 import 'package:snackr/core/utils/config/style/textstyle.dart';
@@ -17,15 +16,16 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletState extends State<WalletScreen> {
   String?
-      //wallet,
+      wallet,
       id;
-  int wallet = 0;
+  // int wallet = 0;
   int? add;
   TextEditingController amountcontroller = new TextEditingController();
 
   getthesharedpref() async {
-    wallet = (await SharedPreferenceHelpers().getUserWallet()) as int;
+    wallet = await SharedPreferenceHelpers().getUserWallet();
     id = await SharedPreferenceHelpers().getUserId();
+    print("this is the wallet $wallet");
     setState(() {});
   }
 
@@ -45,6 +45,9 @@ class _WalletState extends State<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if(wallet==null){
+      wallet='0';
+    }
     return Scaffold(
       body:
           // wallet == null
@@ -92,7 +95,7 @@ class _WalletState extends State<WalletScreen> {
                       SizedBox(
                         height: 5.0,
                       ),
-                      wallet == 0
+                      wallet == null
                           ? Text(
                               "\$ 0",
                               style: AppTextStyle.boldTextStyle,
@@ -365,9 +368,15 @@ class _WalletState extends State<WalletScreen> {
                     ),
                     Center(
                       child: GestureDetector(
-                        onTap: () {
-                          wallet = (wallet! + int.parse(amountcontroller.text));
-                          print(wallet.toString());
+                        onTap: ()async {
+                          int walletadd=int.parse(wallet!);
+                          int amount=int.parse(amountcontroller.text.trim());
+                          int value=walletadd+amount;
+                          wallet=value.toString();
+                         // wallet = (walletadd! + amountcontroller.text) as String?;
+                         // print(wallet.toString());
+                        await SharedPreferenceHelpers().saveUserWallet(value.toString());
+
                           amountcontroller.clear();
                           Navigator.pop(context);
                           setState(() {});

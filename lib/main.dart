@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 //import 'package:flutter_stripe/flutter_stripe.dart';
 //import 'package:snackr/core/helper/cashe_helper/app_constant.dart';
  import 'core/helper/httpOverrides.dart';
+import 'features/admin/add_food.dart';
+import 'features/admin/admin_login.dart';
 import 'features/wallet/wallet.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: WalletScreen(),
+      home: AddFood(),
     );
   }
 }

@@ -37,6 +37,8 @@ class _AdminLoginState extends State<AdminLogin> {
                       top: Radius.elliptical(
                           MediaQuery.of(context).size.width, 110.0))),
             ),
+
+
             Container(
               margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 60.0),
               child: Form(
@@ -127,7 +129,7 @@ class _AdminLoginState extends State<AdminLogin> {
                               ),
                               GestureDetector(
                                 onTap: (){
-                                  LoginAdmin();
+                                 // LoginAdmin();
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(vertical: 12.0),
@@ -160,29 +162,29 @@ class _AdminLoginState extends State<AdminLogin> {
     );
   }
 
-  LoginAdmin() {
-    FirebaseFirestore.instance.collection("Admin").get().then((snapshot) {
-      snapshot.docs.forEach((result) {
-        if (result.data()['id'] != usernamecontroller.text.trim()) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.orangeAccent,
-              content: Text(
-                "Your id is not correct",
-                style: TextStyle(fontSize: 18.0),
-              )));
-        } else if (result.data()['password'] !=
-            userpasswordcontroller.text.trim()) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.orangeAccent,
-              content: Text(
-                "Your password is not correct",
-                style: TextStyle(fontSize: 18.0),
-              )));
-        } else {
-          Route route = MaterialPageRoute(builder: (context) => HomeAdmin());
-          Navigator.pushReplacement(context, route);
-        }
-      });
-    });
-  }
+  // LoginAdmin() {
+  //   FirebaseFirestore.instance.collection("Admin").get().then((snapshot) {
+  //     snapshot.docs.forEach((result) {
+  //       if (result.data()['id'] != usernamecontroller.text.trim()) {
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             backgroundColor: Colors.orangeAccent,
+  //             content: Text(
+  //               "Your id is not correct",
+  //               style: TextStyle(fontSize: 18.0),
+  //             )));
+  //       } else if (result.data()['password'] !=
+  //           userpasswordcontroller.text.trim()) {
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             backgroundColor: Colors.orangeAccent,
+  //             content: Text(
+  //               "Your password is not correct",
+  //               style: TextStyle(fontSize: 18.0),
+  //             )));
+  //       } else {
+  //         Route route = MaterialPageRoute(builder: (context) => HomeAdmin());
+  //         Navigator.pushReplacement(context, route);
+  //       }
+  //     });
+  //   });
+  // }
 }
