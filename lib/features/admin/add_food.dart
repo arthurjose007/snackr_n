@@ -1,12 +1,13 @@
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
 import 'package:snackr/core/utils/config/style/textstyle.dart';
-
 import '../../core/helper/cashe_helper/database.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class AddFood extends StatefulWidget {
   const AddFood({super.key});
@@ -23,7 +24,22 @@ class _AddFoodState extends State<AddFood> {
   TextEditingController detailcontroller = new TextEditingController();
   final ImagePicker _picker = ImagePicker();
   File? selectedImage;
+  Uint8List? imageBytes;
 
+  Future<void> pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result != null && result.files.single.bytes != null) {
+      setState(() {
+        imageBytes = result.files.single.bytes!;
+        print("imageBytes");
+
+        print(imageBytes);
+      });
+    }
+  }
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -97,6 +113,7 @@ class _AddFoodState extends State<AddFood> {
                   ? GestureDetector(
                       onTap: () {
                         getImage();
+                        //pickImage();
                       },
                       child: Center(
                         child: Material(
