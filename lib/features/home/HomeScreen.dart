@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snackr/core/helper/cashe_helper/database.dart';
 import 'package:snackr/features/home/detailed/detailedPage.dart';
 
 import '../../core/utils/config/style/textstyle.dart';
@@ -61,7 +63,155 @@ class _HomeScreenState extends State<HomeScreen> {
   // );
   // }
   // }
+  Stream? fooditemStream;
+  onload() async {
+    fooditemStream = await DataBaseMethods().getFoodItem('Pizza');
+  }
 
+  @override
+  void initState() {
+    onload();
+    super.initState();
+  }
+
+  Widget allItemsVertically() {
+    return StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshort) {
+          return snapshort.hasData
+              ? ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: snapshort.data.docs.lenget,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshort.data.docs[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => DetailedScreen()));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10.0),
+                        child: Material(
+                          elevation: 5,
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: Row(
+                              children: [
+                                Image.network(
+                                  ds['Image'],
+                                  height: 120,
+                                  width: 120,
+                                  fit: BoxFit.cover,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Text(
+                                        ds['Name'],
+                                        style: AppTextStyle.semiTextStyle,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Text(
+                                        "Honey goot cheese",
+                                        style: AppTextStyle.LightTextStyle,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Text(
+                                        "\$" + ds['Price'],
+                                        style: AppTextStyle.semiTextStyle,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        });
+  }
+
+  Widget allItems() {
+    return StreamBuilder(
+        stream: fooditemStream,
+        builder: (context, AsyncSnapshot snapshort) {
+          return snapshort.hasData
+              ? ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: snapshort.data.docs.lenget,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshort.data.docs[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => DetailedScreen()));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(4),
+                        child: Material(
+                          elevation: 5,
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    ds['image'],
+                                    height: 150,
+                                    width: 150,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Text(
+                                  ds['Name'],
+                                  style: AppTextStyle.semiTextStyle,
+                                ),
+                                Text(
+                                  "Fresh and Healthy",
+                                  style: AppTextStyle.LightTextStyle,
+                                ),
+                                Text(
+                                  "\$" + ds['Price'],
+                                  style: AppTextStyle.semiTextStyle,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+              : CircularProgressIndicator();
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,44 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => DetailedScreen()));
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(4),
-                      child: Material(
-                        elevation: 5,
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                "images/salad2.png",
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                              ),
-                              Text(
-                                "Veggie Taco Hash",
-                                style: AppTextStyle.semiTextStyle,
-                              ),
-                              Text(
-                                "Fresh and Healthy",
-                                style: AppTextStyle.LightTextStyle,
-                              ),
-                              Text(
-                                "\$25",
-                                style: AppTextStyle.semiTextStyle,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                  SizedBox(
+                    height: 270,
+                    child: allItems(),
                   ),
                   SizedBox(
                     width: 20,
@@ -211,60 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 30,
             ),
-            Container(
-              margin: EdgeInsets.only(right: 10.0),
-              child: Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "images/salad2.png",
-                        height: 120,
-                        width: 120,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: Text(
-                              "Mediterranean Chickpea Salad",
-                              style: AppTextStyle.semiTextStyle,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: Text(
-                              "Honey goot cheese",
-                              style: AppTextStyle.LightTextStyle,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: Text(
-                              "\$28",
-                              style: AppTextStyle.semiTextStyle,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            )
+            allItemsVertically(),
           ],
         ),
       ),
